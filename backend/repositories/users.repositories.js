@@ -3,6 +3,7 @@ const prisma = require("../database/db");
 const getAllUsers = async () => {
     const users = await prisma.users.findMany({
         select: {
+            id: true,
             username: true,
             email: true,
             profilePicture: true,
@@ -33,7 +34,7 @@ const createUser = async (username, email, password, profilePicture) => {
             username,
             email,
             password,
-            profilePicture,
+            profilePicture
         }
     });
 

@@ -29,7 +29,7 @@ const getSingleUser = async (userId) => {
 
 };
 
-const registerUser = async (username, email, password, profilePicture) => {
+const registerUser = async (username, email, password) => {
   try {
     const existingUser = await usersQuery.getUserByEmail(email);
 
@@ -60,6 +60,10 @@ const registerUser = async (username, email, password, profilePicture) => {
   } catch (err) {
     throw new Error(err);
   }
+};
+
+const updateUser = async () => {
+
 };
 
 const loginUser = async (email, password) => {
@@ -101,5 +105,6 @@ module.exports = {
   getAllUsers,
   getSingleUser,
   registerUser,
+  updateUser,
   loginUser
 };

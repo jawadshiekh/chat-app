@@ -17,13 +17,17 @@ const getMyAllChats = async (req) => {
 
 const startPrivateChat = async (req) => {
   const { userId: senderId } = req.user;
-  const { recipientId } = req.params;
+  const recipientId = +req.params.recipientId;
 
   try {
+    if (senderId === recipientId) {
+      return { error: "Cannot chat yourself." };
+    }
+
     const existingChatId = await chatQuery.searchForExistingChatId(senderId, recipientId);
 
-    if (existingChatId) {
-      return existingChatId;
+    if (existingChatId.length) {
+      return existingChatId.id;
     } else {
       const chatId = await chatQuery.createNewChat(null, null, "private");
 
@@ -51,6 +55,9 @@ const createMessagesOfParticularChat = async (chatId, req) => {
   const { content } = req.body;
 
   try {
+    console.log("chatId: ", chatId)
+    console.log("senderId: ", senderId)
+    console.log("content: ", content)
     await chatQuery.insertChatMessage(chatId, senderId, content);
 
   } catch (error) {
@@ -90,6 +97,17 @@ const editGroupInfo = async (req) => {
   await chatQuery.editGroupInfo(chatId, data);
 };
 
+const deleteParticipantsFromGroup = async (req) => {
+  const { groupId: chatId } = req.params;
+  const { participants } = req.body;
+
+  try {
+    await chatQuery.deleteParticipantsFromGroup(chatId, participants);
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   getMyAllChats,
   startPrivateChat,
@@ -97,5 +115,6 @@ module.exports = {
   createMessagesOfParticularChat,
   createGroupChat,
   addParticipantsInGroup,
+  deleteParticipantsFromGroup,
   editGroupInfo,
 };

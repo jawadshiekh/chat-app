@@ -1,4 +1,4 @@
-const { okResponse, serverErrorResponse } = require("generic-response");
+const { okResponse, serverErrorResponse, badRequestResponse } = require("generic-response");
 
 const chatService = require("../services/chats.services");
 
@@ -17,6 +17,11 @@ const getMyAllChats = async (req, res) => {
 const startPrivateChat = async (req, res) => {
   try {
     const chatId = await chatService.startPrivateChat(req);
+
+    if (chatId?.error) {
+      const response = badRequestResponse(chatId.error);
+      return res.status(response.status.code).json(response);
+    }
 
     const response = okResponse({ chatId });
     return res.status(response.status.code).json(response);
@@ -78,6 +83,18 @@ const addParticipantsInGroup = async (req, res) => {
   }
 };
 
+const deleteParticipantsFromGroup = async (req, res) => {
+  try {
+    await chatService.deleteParticipantsFromGroup(req);
+
+    const response = okResponse();
+    return res.status(response.status.code).json(response);
+  } catch (error) {
+    const response = serverErrorResponse(error.message);
+    return res.status(response.status.code).json(response);
+  }
+};
+
 const editGroupInfo = async (req, res) => {
   try {
     await chatService.editGroupInfo(req);
@@ -97,5 +114,6 @@ module.exports = {
   createMessagesOfParticularChat,
   createGroupChat,
   addParticipantsInGroup,
+  deleteParticipantsFromGroup,
   editGroupInfo,
 };

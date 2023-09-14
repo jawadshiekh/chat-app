@@ -18,6 +18,7 @@ const responses = {
   ERROR_RESPONSES: {
     INVALID_REQUEST: "Request invalid.",
     TOKEN_NOT_PROVIDED: "Token not provided.",
+    INVALID_AUTHORIZATION_HEADER_FORMAT: "Invalid authorization header format",
     INVALID_TOKEN: "Token invalid or expired.",
     UNAUTHORIZED: "User is not authorized to perform this task.",
     INVALID_OTP: "Invalid OTP.",

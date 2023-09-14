@@ -35,7 +35,8 @@ const getSingleUser = async (req, res) => {
 };
 
 const registerUser = async (req, res) => {
-  const { username, email, password, profilePicture = null } = req.body;
+  const { username, email, password } = req.body;
+  const profilePicture = req.images.profile;
 
   try {
     const token = await usersService.registerUser(username, email, password, profilePicture);
@@ -44,6 +45,20 @@ const registerUser = async (req, res) => {
       const response = badRequestResponse(token.error);
       return res.status(response.status.code).json(response);
     }
+
+    const response = okResponse(token);
+    return res.status(response.status.code).json(response);
+  } catch (error) {
+    const response = serverErrorResponse(error.message);
+    return res.status(response.status.code).json(response);
+  }
+};
+
+const updateUser = async (req, res) => {
+  const profilePicture = req.images.profile;
+
+  try {
+    await usersService.updateUser(...req.body, profilePicture);
 
     const response = okResponse(token);
     return res.status(response.status.code).json(response);
@@ -76,5 +91,6 @@ module.exports = {
   getAllUsers,
   getSingleUser,
   registerUser,
+  updateUser,
   loginUser,
 };

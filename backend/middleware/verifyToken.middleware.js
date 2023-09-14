@@ -7,7 +7,7 @@ const verifyToken = (req, res, next) => {
   let token = req.headers.authorization;
 
   if (!token) {
-    const response = forbiddenResponse(ERROR_RESPONSES.TOKEN_NOT_PROVIDED);
+    const response = unauthorizedResponse(ERROR_RESPONSES.TOKEN_NOT_PROVIDED);
     return res.status(response.status.code).json(response);
   }
 
