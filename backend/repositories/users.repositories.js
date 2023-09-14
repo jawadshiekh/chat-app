@@ -1,7 +1,10 @@
 const prisma = require("../database/db");
 
-const getAllUsers = async () => {
+const getAllUsers = async (userId) => {
     const users = await prisma.users.findMany({
+        where: {
+            id: { not: userId }
+        },
         select: {
             id: true,
             username: true,

@@ -11,6 +11,11 @@ const getMyAllChats = async (userId) => {
         },
         include: {
             Participants: {
+                where: {
+                    userId: {
+                        not: userId,
+                    },
+                },
                 include: {
                     user: {
                         select: {
@@ -30,6 +35,7 @@ const getMyAllChats = async (userId) => {
             },
         },
     });
+
 
     console.log(chats);
 
@@ -73,17 +79,6 @@ const searchForExistingChatId = async (senderId, recipientId) => {
 
     return chat;
 };
-
-// const searchForExistingChatId = async (senderId, recipientId) => {
-//     const results = await prisma.$queryRaw`
-//         SELECT c.id FROM Chats AS c
-//         JOIN Participants AS p1 ON c.id = p1.chatId
-//         JOIN Participants AS p2 ON c.id = p2.chatId
-//         WHERE c.type = 'private' AND p1.userId = ${senderId} AND p2.userId = ${recipientId}
-//     `;
-
-//     return results;
-// };
 
 const getChatMessages = async (chatId) => {
     const messages = await prisma.chats.findMany({

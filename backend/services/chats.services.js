@@ -27,7 +27,7 @@ const startPrivateChat = async (req) => {
     const existingChatId = await chatQuery.searchForExistingChatId(senderId, recipientId);
 
     if (existingChatId.length) {
-      return existingChatId.id;
+      return existingChatId[0].id;
     } else {
       const chatId = await chatQuery.createNewChat(null, null, "private");
 
@@ -44,11 +44,32 @@ const getAllMessagesOfParticularChat = async (chatId) => {
   try {
     const messages = await chatQuery.getChatMessages(chatId);
 
-    return messages;
+    if (messages.length) {
+      const groupedMessages = [];
+      let currentDate = null;
+
+      for (const message of messages[0].Messages) {
+        const messageDate = message.createdAt.toISOString().split('T')[0];
+
+        if (messageDate !== currentDate) {
+          const currentGroup = {
+            date: messageDate,
+            data: [],
+          };
+          currentDate = messageDate;
+          groupedMessages.push(currentGroup);
+        }
+
+        groupedMessages[groupedMessages.length - 1].data.push(message);
+      }
+
+      return groupedMessages;
+    }
   } catch (error) {
     throw error;
   }
 };
+
 
 const createMessagesOfParticularChat = async (chatId, req) => {
   const { userId: senderId } = req.user;

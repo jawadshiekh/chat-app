@@ -4,8 +4,10 @@ const usersService = require("../services/users.services");
 const { USERS_RESPONSES } = require("../constants/responses");
 
 const getAllUsers = async (req, res) => {
+  const userId = req.user.userId;
+
   try {
-    const result = await usersService.getAllUsers();
+    const result = await usersService.getAllUsers(userId);
 
     const response = okResponse(result);
     return res.status(response.status.code).json(response);

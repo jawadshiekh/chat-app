@@ -4,9 +4,9 @@ const usersQuery = require("../repositories/users.repositories");
 
 const { ERROR_RESPONSES } = require("../constants/responses");
 
-const getAllUsers = async () => {
+const getAllUsers = async (userId) => {
   try {
-    const users = await usersQuery.getAllUsers();
+    const users = await usersQuery.getAllUsers(userId);
 
     return users;
   } catch (err) {

@@ -36,7 +36,7 @@ const getAllMessagesOfParticularChat = async (req, res) => {
 
   try {
     const messages = await chatService.getAllMessagesOfParticularChat(chatId);
-
+    console.log(messages, "--------------")
     const response = okResponse(messages);
     return res.status(response.status.code).json(response);
   } catch (error) {
