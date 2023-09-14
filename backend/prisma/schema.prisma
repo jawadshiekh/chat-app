@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id             Int            @id @default(autoincrement())
+  username       String
+  email          String
+  password       String
+  profilePicture String?
+  createdAt      DateTime       @default(now())
+  Participants   Participants[]
+  Messages       Messages[]
+}
+
+model Chats {
+  id           Int            @id @default(autoincrement())
+  name         String?
+  profile      String?
+  type         ChatType
+  Participants Participants[]
+  Messages     Messages[]
+}
+
+model Participants {
+  id     Int   @id @default(autoincrement())
+  chatId Int
+  userId Int
+  user   Users @relation(fields: [userId], references: [id])
+  chat   Chats @relation(fields: [chatId], references: [id])
+}
+
+model Messages {
+  id        Int      @id @default(autoincrement())
+  chatId    Int
+  senderId  Int
+  content   String
+  fileId    Int?
+  createdAt DateTime @default(now())
+  chat      Chats    @relation(fields: [chatId], references: [id])
+  sender    Users    @relation(fields: [senderId], references: [id])
+  file      Files?   @relation(fields: [fileId], references: [id])
+}
+
+model Files {
+  id        Int        @id @default(autoincrement())
+  file      String
+  filename  String
+  mimeType  String
+  size      Float
+  createdAt DateTime   @default(now())
+  Messages  Messages[]
+}
+
+enum ChatType {
+  private
+  group
+}
