@@ -3,24 +3,26 @@ const multer = require("multer");
 
 const { userStorage } = require("../config/multer.config");
 
+const verifyToken = require("../middleware/verifyToken.middleware");
+
 const {
     getAllUsers,
     getSingleUser,
     registerUser,
+    verifyUser,
     updateUser,
-    loginUser
+    logoutUser,
 } = require("../controllers/users.controllers");
-const verifyToken = require("../middleware/verifyToken.middleware");
-
 
 const router = express.Router();
 
-const upload = multer({ storage: userStorage });
+const upload_U = multer({ storage: userStorage });
 
 router.get("/", verifyToken, getAllUsers);
 router.get("/profile/:userId", verifyToken, getSingleUser);
-router.post("/register", upload.single("profile"), registerUser);
-router.patch("/profile/:userId", verifyToken, upload.single("profile"), updateUser);
-router.post("/login", loginUser);
+router.post("/register", registerUser);
+router.post("/verify", verifyUser);
+router.patch("/profile/:userId", verifyToken, upload_U.single("avatar"), updateUser);
+router.post("/logout", verifyToken, logoutUser);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const { okResponse, badRequestResponse, serverErrorResponse } = require("generic-response");
+const { okResponse, badRequestResponse, serverErrorResponse, notFoundResponse } = require("generic-response");
 
 const usersService = require("../services/users.services");
 const { USERS_RESPONSES } = require("../constants/responses");
@@ -18,13 +18,13 @@ const getAllUsers = async (req, res) => {
 };
 
 const getSingleUser = async (req, res) => {
-  const userId = req.params.userId;
+  const userId = parseInt(req.params.userId);
 
   try {
     const result = await usersService.getSingleUser(userId);
 
     if (!result) {
-      const response = badRequestResponse(USERS_RESPONSES.NOT_FOUND)
+      const response = notFoundResponse(USERS_RESPONSES.NOT_FOUND)
       return res.status(response.status.code).json(response);
     }
 
@@ -37,18 +37,31 @@ const getSingleUser = async (req, res) => {
 };
 
 const registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
-  const profilePicture = req.images.profile;
+  const { phoneNumber } = req.body;
 
   try {
-    const token = await usersService.registerUser(username, email, password, profilePicture);
+    const result = await usersService.registerUser(phoneNumber);
 
-    if (token?.error) {
-      const response = badRequestResponse(token.error);
+    const response = okResponse(null, result);
+    return res.status(response.status.code).json(response);
+  } catch (error) {
+    const response = serverErrorResponse(error.message);
+    return res.status(response.status.code).json(response);
+  }
+};
+
+const verifyUser = async (req, res) => {
+  const { phoneNumber, otp } = req.body;
+
+  try {
+    const result = await usersService.verifyOtp(phoneNumber, otp);
+
+    if (result?.error) {
+      const response = badRequestResponse(result.error);
       return res.status(response.status.code).json(response);
     }
 
-    const response = okResponse(token);
+    const response = okResponse(result); // sending JWT token
     return res.status(response.status.code).json(response);
   } catch (error) {
     const response = serverErrorResponse(error.message);
@@ -57,12 +70,13 @@ const registerUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const profilePicture = req.images.profile;
+  const body = req.body;
+  const avatar = req.file.avatar;
 
   try {
-    await usersService.updateUser(...req.body, profilePicture);
+    await usersService.updateUser(body, avatar);
 
-    const response = okResponse(token);
+    const response = okResponse();
     return res.status(response.status.code).json(response);
   } catch (error) {
     const response = serverErrorResponse(error.message);
@@ -70,18 +84,14 @@ const updateUser = async (req, res) => {
   }
 };
 
-const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+const logoutUser = async (req, res) => {
+  const { userId } = req.user;
+  const { phoneNumber } = req.body;
 
   try {
-    const user = await usersService.loginUser(email, password);
+    await usersService.logoutUser(userId, phoneNumber);
 
-    if (user?.error) {
-      const response = badRequestResponse(user.error);
-      return res.status(response.status.code).json(response);
-    }
-
-    const response = okResponse(user);
+    const response = okResponse();
     return res.status(response.status.code).json(response);
   } catch (error) {
     const response = serverErrorResponse(error.message);
@@ -93,6 +103,7 @@ module.exports = {
   getAllUsers,
   getSingleUser,
   registerUser,
+  verifyUser,
   updateUser,
-  loginUser,
+  logoutUser,
 };

@@ -8,20 +8,23 @@ datasource db {
 }
 
 model Users {
-  id             Int            @id @default(autoincrement())
-  username       String
-  email          String
-  password       String
-  profilePicture String?
-  createdAt      DateTime       @default(now())
-  Participants   Participants[]
-  Messages       Messages[]
+  id           Int            @id @default(autoincrement())
+  username     String?
+  phoneNumber  String         @unique
+  otp          String?
+  avatar       String?
+  bio          String?
+  createdAt    DateTime       @default(now())
+  otpCreatedAt DateTime?
+  refreshToken String?
+  Participants Participants[]
+  Messages     Messages[]
 }
 
 model Chats {
   id           Int            @id @default(autoincrement())
   name         String?
-  profile      String?
+  icon         String?
   type         ChatType
   Participants Participants[]
   Messages     Messages[]

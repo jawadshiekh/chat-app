@@ -21,8 +21,7 @@ const getMyAllChats = async (userId) => {
                         select: {
                             id: true,
                             username: true,
-                            email: true,
-                            profilePicture: true,
+                            avatar: true,
                         },
                     },
                 },
@@ -43,11 +42,11 @@ const getMyAllChats = async (userId) => {
     return chats;
 };
 
-const createNewChat = async (name, profile, type) => {
+const createNewChat = async (name, icon, type) => {
     const chat = await prisma.chats.create({
         data: {
             name,
-            profile,
+            icon,
             type
         }
     })
@@ -82,7 +81,7 @@ const searchForExistingChatId = async (senderId, recipientId) => {
 
 const getChatMessages = async (chatId) => {
     const messages = await prisma.chats.findMany({
-        where: { id: +chatId },
+        where: { id: chatId },
         include: {
             Messages: true
         }
@@ -92,8 +91,6 @@ const getChatMessages = async (chatId) => {
 };
 
 const insertChatMessage = async (chatId, senderId, content) => {
-    chatId = parseInt(chatId);
-
     await prisma.messages.create({
         data: {
             chatId,
@@ -123,9 +120,9 @@ const deleteParticipantsFromGroup = async (chatId, participants) => {
     })
 };
 
-const editGroupInfo = async (chatId, data) => {
+const editGroupInfo = async (chatId, data, icon) => {
     await prisma.chats.update({
-        data: { ...data },
+        data: { ...data, icon },
         where: { id: chatId }
     })
 };

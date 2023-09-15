@@ -8,20 +8,26 @@ const getAllUsers = async (userId) => {
         select: {
             id: true,
             username: true,
-            email: true,
-            profilePicture: true,
+            avatar: true,
         }
     });
 
     return users;
-}
+};
+
+const getUserByNumber = async (phoneNumber) => {
+    const user = await prisma.users.findFirst({
+        where: { phoneNumber }
+    });
+
+    return user;
+};
 
 const getSingleUser = async (userId) => {
     const user = await prisma.users.findUnique({
         select: {
             username: true,
-            email: true,
-            profilePicture: true,
+            avatar: true,
         },
         where: {
             id: userId
@@ -29,32 +35,45 @@ const getSingleUser = async (userId) => {
     });
 
     return user;
-}
+};
 
-const createUser = async (username, email, password, profilePicture) => {
+const createUser = async (phoneNumber) => {
     const user = await prisma.users.create({
+        data: { phoneNumber }
+    });
+
+    return user;
+};
+
+const updateUser = async (data, avatar) => {
+    await prisma.users.updateMany({
         data: {
-            username,
-            email,
-            password,
-            profilePicture
+            ...data,
+            avatar
         }
     });
+};
 
-    return user;
-}
-
-const getUserByEmail = async (email) => {
-    const user = await prisma.users.findFirst({
-        where: { email }
+const setOtp = async (phoneNumber, otp) => {
+    await prisma.users.update({
+        data: { otp, otpCreatedAt: new Date() },
+        where: { phoneNumber }
     });
+};
 
-    return user;
-}
+const logoutUser = async (userId, phoneNumber) => {
+    await prisma.users.update({
+        data: { refreshToken: null },
+        where: { userId, phoneNumber }
+    });
+};
 
 module.exports = {
     getAllUsers,
     getSingleUser,
     createUser,
-    getUserByEmail,
-}
+    updateUser,
+    getUserByNumber,
+    setOtp,
+    logoutUser,
+};

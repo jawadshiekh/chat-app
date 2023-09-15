@@ -8,9 +8,6 @@ const userStorage = multer.diskStorage({
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const fileName = 'image-' + uniqueSuffix + '.' + file.originalname.split('.').pop();
 
-        req.images = {};
-        req.images.profile = fileName;
-
         cb(null, fileName);
     },
 });
@@ -23,7 +20,6 @@ const groupStorage = multer.diskStorage({
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const fileName = 'image-' + uniqueSuffix + '.' + file.originalname.split('.').pop();
 
-        req.generatedFileName = fileName;
         cb(null, fileName);
     },
 });
@@ -36,7 +32,6 @@ const chatStorage = multer.diskStorage({
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const fileName = 'image-' + uniqueSuffix + '.' + file.originalname.split('.').pop();
 
-        req.generatedFileName = fileName;
         cb(null, fileName);
     },
 });
