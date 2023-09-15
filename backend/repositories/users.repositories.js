@@ -26,8 +26,11 @@ const getUserByNumber = async (phoneNumber) => {
 const getSingleUser = async (userId) => {
     const user = await prisma.users.findUnique({
         select: {
+            id: true,
             username: true,
+            phoneNumber: true,
             avatar: true,
+            bio: true
         },
         where: {
             id: userId
@@ -39,7 +42,10 @@ const getSingleUser = async (userId) => {
 
 const createUser = async (phoneNumber) => {
     const user = await prisma.users.create({
-        data: { phoneNumber }
+        data: {
+            phoneNumber,
+            username: "4354638d4e68f",
+        }
     });
 
     return user;

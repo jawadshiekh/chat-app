@@ -9,7 +9,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(reqResInspector());
+// app.use(reqResInspector());
 
 app.use("/api/users", usersRoutes);
 app.use("/api/chats", chatRoutes);
