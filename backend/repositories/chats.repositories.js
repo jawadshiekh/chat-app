@@ -82,8 +82,15 @@ const searchForExistingChatId = async (senderId, recipientId) => {
 const getChatMessages = async (chatId) => {
     const messages = await prisma.chats.findMany({
         where: { id: chatId },
-        include: {
-            Messages: true
+        select: {
+            Messages: {
+                select: {
+                    senderId: true,
+                    content: true,
+                    createdAt: true,
+                    file: true
+                }
+            }
         }
     });
 

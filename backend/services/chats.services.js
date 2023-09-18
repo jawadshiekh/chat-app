@@ -70,11 +70,8 @@ const createMessagesOfParticularChat = async (chatId, senderId, content, documen
 
     if (document) {
       const { filename, originalname, mimetype, size } = document;
-
       fileId = await chatQuery.insertChatFile(filename, originalname, mimetype, size);
     }
-
-    console.log("fileId: ", fileId)
 
     await chatQuery.insertChatMessage(chatId, senderId, content, fileId);
 

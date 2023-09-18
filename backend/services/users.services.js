@@ -66,7 +66,9 @@ const verifyOtp = async (phoneNumber, otp) => {
       return { error: "Invalid OTP." };
     }
 
-    // OTP is valid, sending JWT token
+    // OTP is valid, resting otp
+    await usersQuery.resetOtp(phoneNumber);
+
     const token = jwt.sign(
       { userId: user.id },
       process.env.JWT_SECRET_KEY,

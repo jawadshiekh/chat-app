@@ -53,8 +53,10 @@ const getAllMessagesOfParticularChat = async (req, res) => {
 const createMessagesOfParticularChat = async (req, res) => {
   const chatId = parseInt(req.params.chatId);
   const { userId: senderId } = req.user;
-  const { content } = req.body;
+  let { content } = req.body;
   const document = req.file;
+
+  if (content === undefined) content = null;
 
   try {
     await chatService.createMessagesOfParticularChat(chatId, senderId, content, document);

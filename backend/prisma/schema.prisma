@@ -42,7 +42,7 @@ model Messages {
   id        Int      @id @default(autoincrement())
   chatId    Int
   senderId  Int
-  content   String
+  content   String?
   fileId    Int?
   createdAt DateTime @default(now())
   chat      Chats    @relation(fields: [chatId], references: [id])

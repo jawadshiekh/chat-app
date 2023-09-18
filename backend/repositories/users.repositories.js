@@ -67,6 +67,13 @@ const setOtp = async (phoneNumber, otp) => {
     });
 };
 
+const resetOtp = async (phoneNumber) => {
+    await prisma.users.update({
+        data: { otp: null, otpCreatedAt: null },
+        where: { phoneNumber }
+    });
+};
+
 const logoutUser = async (userId, phoneNumber) => {
     await prisma.users.update({
         data: { refreshToken: null },
@@ -81,5 +88,6 @@ module.exports = {
     updateUser,
     getUserByNumber,
     setOtp,
+    resetOtp,
     logoutUser,
 };
