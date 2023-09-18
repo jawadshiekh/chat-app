@@ -90,10 +90,23 @@ const getChatMessages = async (chatId) => {
     return messages;
 };
 
-const insertChatMessage = async (messageData) => {
+const insertChatMessage = async (chatId, senderId, content, fileId) => {
     await prisma.messages.create({
-        data: messageData,
+        data: { chatId, senderId, content, fileId },
     });
+};
+
+const insertChatFile = async (filename, originalname, mimetype, size) => {
+    const createdFile = await prisma.files.create({
+        data: {
+            file: filename,
+            filename: originalname,
+            mimeType: mimetype,
+            size: size,
+        },
+    });
+
+    return createdFile.id;
 };
 
 const addParticipantsInChat = async (chatId, participants) => {
@@ -129,6 +142,7 @@ module.exports = {
     searchForExistingChatId,
     getChatMessages,
     insertChatMessage,
+    insertChatFile,
     addParticipantsInChat,
     deleteParticipantsFromGroup,
     editGroupInfo,

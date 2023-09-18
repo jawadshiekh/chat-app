@@ -1,5 +1,3 @@
-const prisma = require("../database/db");
-
 const chatQuery = require("../repositories/chats.repositories");
 
 const getMyAllChats = async (userId) => {
@@ -68,26 +66,17 @@ const getAllMessagesOfParticularChat = async (chatId) => {
 
 const createMessagesOfParticularChat = async (chatId, senderId, content, document) => {
   try {
-    const messageData = {
-      chatId,
-      senderId,
-      content,
-    };
+    let fileId = null;
 
     if (document) {
       const { filename, originalname, mimetype, size } = document;
 
-      messageData.file = {
-        create: {
-          file: filename,
-          filename: originalname,
-          mimeType: mimetype,
-          size: size,
-        },
-      };
+      fileId = await chatQuery.insertChatFile(filename, originalname, mimetype, size);
     }
 
-    await chatQuery.insertChatMessage(messageData);
+    console.log("fileId: ", fileId)
+
+    await chatQuery.insertChatMessage(chatId, senderId, content, fileId);
 
   } catch (error) {
     throw error;
