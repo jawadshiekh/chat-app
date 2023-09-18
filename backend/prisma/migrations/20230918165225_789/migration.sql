@@ -5,7 +5,7 @@ CREATE TABLE `Users` (
     `phoneNumber` VARCHAR(191) NOT NULL,
     `otp` VARCHAR(191) NULL,
     `avatar` VARCHAR(191) NULL,
-    `bio` VARCHAR(191) NULL,
+    `bio` VARCHAR(191) NULL DEFAULT 'Hey there, i am using Krlete hain, phir krega?',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `otpCreatedAt` DATETIME(3) NULL,
     `refreshToken` VARCHAR(191) NULL,
@@ -38,7 +38,7 @@ CREATE TABLE `Messages` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `chatId` INTEGER NOT NULL,
     `senderId` INTEGER NOT NULL,
-    `content` VARCHAR(191) NOT NULL,
+    `content` VARCHAR(191) NULL,
     `fileId` INTEGER NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
