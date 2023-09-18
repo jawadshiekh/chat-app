@@ -66,10 +66,28 @@ const getAllMessagesOfParticularChat = async (chatId) => {
   }
 };
 
-
-const createMessagesOfParticularChat = async (chatId, senderId, content) => {
+const createMessagesOfParticularChat = async (chatId, senderId, content, document) => {
   try {
-    await chatQuery.insertChatMessage(chatId, senderId, content);
+    const messageData = {
+      chatId,
+      senderId,
+      content,
+    };
+
+    if (document) {
+      const { filename, originalname, mimetype, size } = document;
+
+      messageData.file = {
+        create: {
+          file: filename,
+          filename: originalname,
+          mimeType: mimetype,
+          size: size,
+        },
+      };
+    }
+
+    await chatQuery.insertChatMessage(messageData);
 
   } catch (error) {
     throw error;

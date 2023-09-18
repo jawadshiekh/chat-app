@@ -90,13 +90,9 @@ const getChatMessages = async (chatId) => {
     return messages;
 };
 
-const insertChatMessage = async (chatId, senderId, content) => {
+const insertChatMessage = async (messageData) => {
     await prisma.messages.create({
-        data: {
-            chatId,
-            senderId,
-            content,
-        }
+        data: messageData,
     });
 };
 
@@ -136,4 +132,4 @@ module.exports = {
     addParticipantsInChat,
     deleteParticipantsFromGroup,
     editGroupInfo,
-}
+};

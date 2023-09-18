@@ -27,7 +27,7 @@ const upload_C = multer({ storage: chatStorage });
 // private/group chats
 router.get("/", verifyToken, getMyAllChats);
 router.get("/:chatId/messages", verifyToken, getAllMessagesOfParticularChat);
-router.post("/:chatId/messages", verifyToken, createMessagesOfParticularChat);
+router.post("/:chatId/messages", verifyToken, upload_C.single("document"), createMessagesOfParticularChat);
 
 // private chats
 router.get("/start/private/:recipientId", verifyToken, validateRequest(startPrivateChatSchema), startPrivateChat);

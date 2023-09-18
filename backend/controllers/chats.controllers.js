@@ -54,9 +54,10 @@ const createMessagesOfParticularChat = async (req, res) => {
   const chatId = parseInt(req.params.chatId);
   const { userId: senderId } = req.user;
   const { content } = req.body;
+  const document = req.file;
 
   try {
-    await chatService.createMessagesOfParticularChat(chatId, senderId, content);
+    await chatService.createMessagesOfParticularChat(chatId, senderId, content, document);
 
     const response = okResponse();
     return res.status(response.status.code).json(response);
