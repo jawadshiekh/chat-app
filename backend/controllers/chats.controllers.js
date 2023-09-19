@@ -68,13 +68,13 @@ const createMessagesOfParticularChat = async (req, res) => {
 };
 
 const createGroupChat = async (req, res) => {
-  const { name, participants } = req.body;
-  const icon = req.file.icon;
+  const { name } = req.body;
+  const icon = req.file.filename;
 
   try {
-    await chatService.createGroupChat(name, participants, icon);
+    const chatId = await chatService.createGroupChat(name, icon);
 
-    const response = okResponse();
+    const response = okResponse({ chatId });
     return res.status(response.status.code).json(response);
   } catch (error) {
     const response = serverErrorResponse(error.message);

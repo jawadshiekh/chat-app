@@ -80,11 +80,9 @@ const createMessagesOfParticularChat = async (chatId, senderId, content, documen
   }
 };
 
-const createGroupChat = async (name, participants, icon) => {
+const createGroupChat = async (name, icon) => {
   try {
     const chatId = await chatQuery.createNewChat(name, icon, "group");
-
-    await chatQuery.addParticipantsInChat(chatId, participants);
 
     return chatId;
   } catch (error) {
